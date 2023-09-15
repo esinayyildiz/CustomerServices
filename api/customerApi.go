@@ -12,14 +12,15 @@ import (
 func SaveCustomerApi(c *gin.Context) {
 	var customer models.Customer
 
-	// JSON verisini al ve customer nesnesine çöz
+	// control the json data
 	if err := c.ShouldBindJSON(&customer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// customer nesnesini veritabanına kaydet
+	// save the customer object
 	err := data.SaveCustomer(customer)
+	//if any error exists
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "The customer could not be saved"})
 		return
@@ -29,7 +30,7 @@ func SaveCustomerApi(c *gin.Context) {
 }
 
 func DeleteCustomerApi(c *gin.Context) {
-	// URL'den müşteri kimliğini al
+	// id
 	id, _ := strconv.Atoi(c.Query("id"))
 
 	// delete customer
@@ -43,10 +44,10 @@ func DeleteCustomerApi(c *gin.Context) {
 }
 
 func GetCustomerApi(c *gin.Context) {
-	// URL'den müşteri kimliğini al
+	// id from user
 	id, _ := strconv.Atoi(c.Query("id"))
 
-	// Müşteriyi veritabanından oku
+	//read the customer from database
 	customer, err := data.GetCustomer(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "The customer could not be read"})
@@ -57,22 +58,20 @@ func GetCustomerApi(c *gin.Context) {
 }
 
 func UpdateCustomerApi(c *gin.Context) {
-	// URL'den müşteri kimliğini al
+	// id from the user
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	// JSON verisini al ve customer nesnesine çöz
 	var customer models.Customer
 	if err := c.ShouldBindJSON(&customer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Müşteriyi veritabanında güncelle
 	err := data.UpdateCustomer(id, customer)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Müşteri güncellenemedi"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "The customer could not be updated"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Müşteri başarıyla güncellendi"})
+	c.JSON(http.StatusOK, gin.H{"message": "The customer has been successflly updated"})
 }

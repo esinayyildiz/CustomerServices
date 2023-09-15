@@ -11,15 +11,12 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/customer/:id", api.GetCustomerApi)
 	router.PUT("/customer/:id", api.UpdateCustomerApi)
 
-	// Diğer API uçları da burada tanımlanabilir
 }
 
 func main() {
 	router := gin.Default()
 
-	// API uçlarını yükle
 	SetupRoutes(router)
 
-	// Server'ı başlat
 	router.Run(":8080")
 }
